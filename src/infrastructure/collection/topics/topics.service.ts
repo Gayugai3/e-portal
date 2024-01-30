@@ -7,9 +7,13 @@ import { Topic } from './topics.schema';
 import { CreateTopicDto } from 'src/use-cases/topics/create/create-topic.dto';
 
 import { ObjectId } from 'mongodb';
+import { QuestionService } from '../questions/questions.service';
 @Injectable()
 export class TopicService {
-  constructor(@InjectModel(Topic.name) private topicModel: Model<Topic>) {}
+  constructor(
+    @InjectModel(Topic.name) private topicModel: Model<Topic>,
+    // private questionService: QuestionService,
+  ) {}
 
   async createTopic(createTopicDto: CreateTopicDto): Promise<Topic> {
     const createdTopic = new this.topicModel(createTopicDto);
@@ -105,4 +109,18 @@ export class TopicService {
   ): Promise<void> {
     await this.topicModel.findByIdAndUpdate(topicId, { questionIds }).exec();
   }
+
+  // async deleteTopic(topicId: string): Promise<void> {
+  //   // Verify if the topic exists
+  //   const topic = await this.topicModel.findById(topicId).exec();
+  //   if (!topic) {
+  //     throw new NotFoundException(`Topic with ID ${topicId} not found`);
+  //   }
+
+  //   // Delete the associated questions
+  //   await this.questionService.deleteQuestionsByTopicId(topicId);
+
+  //   // Delete the topic
+  //   await this.topicModel.findByIdAndDelete(topicId).exec();
+  // }
 }

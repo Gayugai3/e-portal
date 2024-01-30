@@ -4,7 +4,9 @@ import {
   Get,
   NotFoundException,
   Param,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Question } from 'src/infrastructure/collection/questions/questions.schema';
 import { QuestionService } from 'src/infrastructure/collection/questions/questions.service';
 
@@ -13,6 +15,7 @@ export class GetallByTopicController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Get(':topicId/questions')
+  @UseGuards(AuthGuard())
   async getQuestionsByTopic(
     @Param('topicId') topicId: string,
   ): Promise<Question[]> {

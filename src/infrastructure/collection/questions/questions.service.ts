@@ -20,7 +20,6 @@ export class QuestionService {
   constructor(
     @InjectModel(Question.name) private questionModel: Model<Question>,
     private topicService: TopicService,
-    // @InjectModel(Topic.name) private topicModel: Model<Topic>,
   ) {}
 
   async createQuestion(
@@ -200,4 +199,14 @@ export class QuestionService {
     // Update the topic in the database with the modified questionIds array
     await this.topicService.updateTopicQuestionIds(topicId, topic.questionIds);
   }
+
+  // async deleteQuestionsByTopicId(topicId: string): Promise<void> {
+  //   // Update questions to remove the specified topicId from the topicIds array
+  //   await this.questionModel
+  //     .updateMany(
+  //       { topicIds: { $in: [topicId] } },
+  //       { $pull: { topicIds: topicId } },
+  //     )
+  //     .exec();
+  // }
 }

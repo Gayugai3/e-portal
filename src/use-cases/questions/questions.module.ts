@@ -19,14 +19,16 @@ import {
   TopicSchema,
 } from 'src/infrastructure/collection/topics/topics.schema';
 import { TopicService } from './../../infrastructure/collection/topics/topics.service';
+import { UserAuthModule } from '../user-auth/user-auth.module';
 
 @Module({
   imports: [
+    UserAuthModule,
     MongooseModule.forFeature([
       { name: Question.name, schema: QuestionSchema },
       { name: Topic.name, schema: TopicSchema },
     ]),
-    TopicsModule,
+    forwardRef(() => TopicsModule),
   ],
   controllers: [
     QuestionController,
@@ -39,6 +41,7 @@ import { TopicService } from './../../infrastructure/collection/topics/topics.se
     AttachController,
   ],
   providers: [QuestionService, TopicService],
+  // providers: [QuestionService],
   exports: [QuestionService, MongooseModule],
 })
 export class QuestionsModule {}

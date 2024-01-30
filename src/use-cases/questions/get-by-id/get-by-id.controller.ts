@@ -1,4 +1,5 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Question } from 'src/infrastructure/collection/questions/questions.schema';
 import { QuestionService } from 'src/infrastructure/collection/questions/questions.service';
 
@@ -7,6 +8,7 @@ export class GetByIdController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Get(':questionId')
+  @UseGuards(AuthGuard())
   async getQuestionById(
     @Param('questionId') questionId: string,
   ): Promise<Question> {

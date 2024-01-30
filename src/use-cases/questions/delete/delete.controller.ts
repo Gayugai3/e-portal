@@ -1,4 +1,5 @@
-import { Controller, Delete, NotFoundException, Param } from '@nestjs/common';
+import { Controller, Delete, NotFoundException, Param, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { QuestionService } from 'src/infrastructure/collection/questions/questions.service';
 
 
@@ -6,7 +7,8 @@ import { QuestionService } from 'src/infrastructure/collection/questions/questio
 export class DeleteController {
     constructor(private readonly questionService: QuestionService) {}
 
-    @Delete(':questionId')
+  @Delete(':questionId')
+  @UseGuards(AuthGuard())
   async deleteQuestion(@Param('questionId') questionId: string): Promise<void> {
     try {
       await this.questionService.deleteQuestion(questionId);
