@@ -11,6 +11,7 @@ async function bootstrap() {
     .setDescription('The ePortal API description')
     .setVersion('1.0')
     .addTag('E-Portal example')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

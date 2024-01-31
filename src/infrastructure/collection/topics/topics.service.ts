@@ -1,6 +1,11 @@
 // topic.service.ts
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Topic } from './topics.schema';
@@ -12,6 +17,7 @@ import { QuestionService } from '../questions/questions.service';
 export class TopicService {
   constructor(
     @InjectModel(Topic.name) private topicModel: Model<Topic>,
+    // @Inject(forwardRef(() => QuestionService))
     // private questionService: QuestionService,
   ) {}
 

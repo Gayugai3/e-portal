@@ -26,7 +26,7 @@ import {
       { name: Question.name, schema: QuestionSchema },
     ]),
     // QuestionsModule,
-    // forwardRef(() => QuestionsModule),
+    forwardRef(() => QuestionsModule),
   ],
   controllers: [
     TopicController,
@@ -35,7 +35,7 @@ import {
     UpdateController,
     DeleteController,
   ],
-  providers: [TopicService],
+  providers: [TopicService, QuestionService],
   // providers: [TopicService],
   exports: [TopicService, MongooseModule],
 })

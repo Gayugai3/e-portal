@@ -25,6 +25,13 @@ export class QuestionService {
   async createQuestion(
     createQuestionDto: CreateQuestionDto,
   ): Promise<Question> {
+    // Check if topicIds is provided and not empty
+    if (
+      !createQuestionDto.topicIds ||
+      createQuestionDto.topicIds.length === 0
+    ) {
+      throw new BadRequestException('At least one topicId is required.');
+    }
     // Retrieve all topics at once
     const topics = await this.topicService.getTopicsByIds(
       createQuestionDto.topicIds,
@@ -200,13 +207,13 @@ export class QuestionService {
     await this.topicService.updateTopicQuestionIds(topicId, topic.questionIds);
   }
 
-  // async deleteQuestionsByTopicId(topicId: string): Promise<void> {
-  //   // Update questions to remove the specified topicId from the topicIds array
-  //   await this.questionModel
-  //     .updateMany(
-  //       { topicIds: { $in: [topicId] } },
-  //       { $pull: { topicIds: topicId } },
-  //     )
-  //     .exec();
-  // }
+  async deleteQuestionsByTopicId(topicId: string): Promise<void> {
+    // Update questions to remove the specified topicId from the topicIds array
+    await this.questionModel
+      .updateMany(
+        { topicIds: { $in: [topicId] } },
+        { $pull: { topicIds: topicId } },
+      )
+      .exec();
+  }
 }

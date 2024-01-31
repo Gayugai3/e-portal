@@ -2,13 +2,16 @@ import { Body, Controller, NotFoundException, Put, UseGuards } from '@nestjs/com
 import { QuestionService } from 'src/infrastructure/collection/questions/questions.service';
 import { AttachRequestDto } from './attach.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('attach')
 export class AttachController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Put()
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   async attachQuestion(
     @Body() attachRequestDto: AttachRequestDto,
   ): Promise<void> {

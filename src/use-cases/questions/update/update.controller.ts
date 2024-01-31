@@ -2,13 +2,17 @@ import { Body, Controller, Param, Put, UseGuards } from '@nestjs/common';
 import { QuestionService } from 'src/infrastructure/collection/questions/questions.service';
 import { UpdateQuestionDto } from './update-question.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
+
+@ApiBearerAuth()
 @Controller('update')
 export class UpdateController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Put('/:questionId')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   async updateQuestion(
     @Param('questionId') questionId: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
