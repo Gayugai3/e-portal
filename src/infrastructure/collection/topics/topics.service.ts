@@ -13,12 +13,13 @@ import { CreateTopicDto } from 'src/use-cases/topics/create/create-topic.dto';
 
 import { ObjectId } from 'mongodb';
 import { QuestionService } from '../questions/questions.service';
+import { UpdateTopicDto } from 'src/use-cases/topics/update/update-topic.dto';
 @Injectable()
 export class TopicService {
   constructor(
     @InjectModel(Topic.name) private topicModel: Model<Topic>,
-    // @Inject(forwardRef(() => QuestionService))
-    // private questionService: QuestionService,
+    @Inject(forwardRef(() => QuestionService))
+    private questionService: QuestionService,
   ) {}
 
   async createTopic(createTopicDto: CreateTopicDto): Promise<Topic> {
@@ -116,17 +117,66 @@ export class TopicService {
     await this.topicModel.findByIdAndUpdate(topicId, { questionIds }).exec();
   }
 
-  // async deleteTopic(topicId: string): Promise<void> {
-  //   // Verify if the topic exists
-  //   const topic = await this.topicModel.findById(topicId).exec();
-  //   if (!topic) {
-  //     throw new NotFoundException(`Topic with ID ${topicId} not found`);
-  //   }
+  async deleteTopic(topicId: string): Promise<void> {
+    // Verify if the topic exists
+    const topic = await this.topicModel.findById(topicId).exec();
+    if (!topic) {
+      throw new NotFoundException(`Topic with ID ${topicId} not found`);
+    }
 
-  //   // Delete the associated questions
-  //   await this.questionService.deleteQuestionsByTopicId(topicId);
+    // Delete the associated questions
+    await this.questionService.deleteQuestionsByTopicId(topicId);
 
-  //   // Delete the topic
-  //   await this.topicModel.findByIdAndDelete(topicId).exec();
-  // }
+    // Delete the topic
+    await this.topicModel.findByIdAndDelete(topicId).exec();
+  }
+
+  async updateTopic(
+    topicId: string,
+    updateTopicDto: UpdateTopicDto,
+  ): Promise<void> {
+    const { questionIds, ...otherUpdateFields } = updateTopicDto;
+
+    // Verify if the topic exists
+    const topic = await this.topicModel.findById(topicId).exec();
+    if (!topic) {
+      throw new NotFoundException(`Topic with ID ${topicId} not found`);
+    }
+
+    // Log or inspect the update fields
+    console.log('Updating topic with fields:', otherUpdateFields);
+
+    // Update the topic fields (excluding questionIds)
+    Object.assign(topic, otherUpdateFields);
+
+
+    // If new questionIds are provided, update the topic's questionIds
+    if (questionIds && questionIds.length > 0) {
+      // Ensure that we're not duplicating questionIds
+      const uniqueQuestionIds = Array.from(
+        new Set([...topic.questionIds, ...questionIds]),
+      );
+
+      // Set the updated questionIds
+      topic.questionIds = uniqueQuestionIds;
+    }
+
+    // Save the changes
+    await topic.save();
+
+    // If new questionIds are provided, update questions
+    if (questionIds && questionIds.length > 0) {
+      await this.updateQuestionsWithTopic(topicId, questionIds);
+    }
+  }
+
+  private async updateQuestionsWithTopic(
+    topicId: string,
+    questionIds: string[],
+  ): Promise<void> {
+    // Iterate through each questionId and update the question's topics
+    for (const questionId of questionIds) {
+      await this.questionService.addTopicToQuestion(questionId, topicId);
+    }
+  }
 }

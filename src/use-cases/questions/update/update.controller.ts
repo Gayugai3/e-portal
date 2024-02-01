@@ -2,12 +2,12 @@ import { Body, Controller, Param, Put, UseGuards } from '@nestjs/common';
 import { QuestionService } from 'src/infrastructure/collection/questions/questions.service';
 import { UpdateQuestionDto } from './update-question.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
-
+@ApiTags('Questions')
 @ApiBearerAuth()
-@Controller('update')
+@Controller('question')
 export class UpdateController {
   constructor(private readonly questionService: QuestionService) {}
 

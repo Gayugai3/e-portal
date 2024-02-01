@@ -3,8 +3,9 @@ import { QuestionService } from 'src/infrastructure/collection/questions/questio
 import { AttachRequestDto } from './attach.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Questions')
 @ApiBearerAuth()
 @Controller('attach')
 export class AttachController {

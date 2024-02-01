@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TopicsModule } from './use-cases/topics/topics.module';
 import { QuestionsModule } from './use-cases/questions/questions.module';
 import { UserAuthModule } from './use-cases/user-auth/user-auth.module';
+import { TopicController } from './use-cases/topics/create/create.controller';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UserAuthModule } from './use-cases/user-auth/user-auth.module';
     QuestionsModule,
     UserAuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, TopicController],
   providers: [AppService],
 })
 export class AppModule {}

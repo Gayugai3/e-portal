@@ -6,12 +6,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { QuestionService } from 'src/infrastructure/collection/questions/questions.service';
 
+@ApiTags('Questions')
 @ApiBearerAuth()
-@Controller('delete')
+@Controller('question')
 export class DeleteController {
   constructor(private readonly questionService: QuestionService) {}
 

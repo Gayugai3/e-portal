@@ -12,7 +12,7 @@ export class signUpDto {
   @IsEmail({}, { message: 'Please enter a valid email address' })
   readonly email: string;
 
-  @ApiProperty({ description: 'Password', example: '******' })
+  @ApiProperty({ description: 'Password', example: '123456' })
   @IsNotEmpty()
   @IsString()
   @MinLength(6)

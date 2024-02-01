@@ -2,8 +2,10 @@
 
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,6 +21,7 @@ import { AttachRequestDto } from 'src/use-cases/questions/attach/attach.dto';
 export class QuestionService {
   constructor(
     @InjectModel(Question.name) private questionModel: Model<Question>,
+    @Inject(forwardRef(() => TopicService))
     private topicService: TopicService,
   ) {}
 
@@ -188,7 +191,7 @@ export class QuestionService {
     }
 
     if (!topic) {
-      throw new NotFoundException(`Topic with ID ${topicId} not found`);
+      throw new NotFoundException(`Topic with ID  ${topicId} is not found`);
     }
 
     // Attach the question to the specified topic
@@ -215,5 +218,18 @@ export class QuestionService {
         { $pull: { topicIds: topicId } },
       )
       .exec();
+  }
+
+  async addTopicToQuestion(questionId: string, topicId: string): Promise<void> {
+    const question = await this.questionModel.findById(questionId).exec();
+
+    if (!question) {
+      throw new NotFoundException(`Question with ID ${questionId} not found`);
+    }
+
+    if (!question.topicIds.includes(topicId)) {
+      question.topicIds.push(topicId);
+      await question.save();
+    }
   }
 }

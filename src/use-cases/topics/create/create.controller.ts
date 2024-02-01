@@ -4,11 +4,12 @@ import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { TopicService } from 'src/infrastructure/collection/topics/topics.service';
 import { CreateTopicDto } from './create-topic.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
+@ApiTags('Topics')
 @ApiBearerAuth()
-@Controller('topics')
+@Controller('topic')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
 

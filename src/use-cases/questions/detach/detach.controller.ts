@@ -9,9 +9,10 @@ import {
 import { QuestionService } from 'src/infrastructure/collection/questions/questions.service';
 import { DetachRequestDto } from './detach-request.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
+@ApiTags('Questions')
 @ApiBearerAuth()
 @Controller('detach')
 export class DetachController {
